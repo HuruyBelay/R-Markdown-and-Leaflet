@@ -1,0 +1,28 @@
+---
+title: "R Markdown and Leaflet"
+author: "Huruy Belay"
+date: "May 16, 2017"
+output: html_document
+---
+
+```{r, echo=FALSE}
+library(leaflet)
+set.seed(1234)
+house_price <- read.csv('house_price.csv', sep=",", header = TRUE, stringsAsFactors = FALSE)
+col=sample(c("red", "green", "blue"), 51, replace = TRUE)
+new_data<-cbind(house_price, col)
+
+```
+
+```{r, echo=FALSE, message=FALSE}
+my_map <- new_data %>%
+    leaflet() %>%
+    addTiles() %>%
+    addCircleMarkers(color=new_data$col)%>%
+    addCircles(lat=new_data$Lat, lng=new_data$Long, 
+              weight = 0.5, radius = (new_data$Average.Listing.Price)/2, 
+              popup = strwrap(new_data$Average.Listing.Price))%>%
+    addLegend(labels=LETTERS[1:3], colors=c("red", "green", "blue"))
+my_map
+```
+
